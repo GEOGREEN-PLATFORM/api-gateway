@@ -1,0 +1,62 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: api-gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_URL:http://217.198.13.249:30096}/realms/geogreen
+          jwk-set-uri: ${KEYCLOAK_URL:http://217.198.13.249:30096}/realms/geogreen/protocol/openid-connect/certs
+  cloud:
+    gateway:
+      routes:
+        - id: service-1
+          uri: http://217.198.13.249:30091
+          predicates:
+            - Path=/service-1/**
+          filters:
+            - StripPrefix=1
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: Service 1
+        url: /service-1/v3/api-docs
+
+#          filters:
+#            - name: CircuitBreaker
+#              args:
+#                name: default-circuit-breaker
+#                fallbackUri: forward:/fallback
+
+logging:
+  level:
+    root: ${LOG_LEVEL:info}
+    org.springframework.cloud.gateway: INFO
+
+#resilience4j:
+#  circuitbreaker:
+#    configs:
+#      default:
+#        sliding-window-type: count_based
+#        sliding-window-size: 10
+#        failure-rate-threshold: 50
+#        wait-duration-in-open-state: 60s
+#        permitted-number-of-calls-in-half-open-state: 3
+#        automatic-transition-from-open-to-half-open-enabled: true
+#        minimum-number-of-calls: 3
+#    instances:
+#      default-circuit-breaker:
+#        base-config: default
+#  timelimiter:
+#    configs:
+#      default:
+#        timeout-duration: 5s
+#    instances:
+#      default-circuit-breaker:
+#        base-config: default
