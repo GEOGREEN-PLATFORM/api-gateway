@@ -12,34 +12,29 @@ spring:
         jwt:
           issuer-uri: ${KEYCLOAK_URL:http://217.198.13.249:30096}/realms/geogreen
           jwk-set-uri: ${KEYCLOAK_URL:http://217.198.13.249:30096}/realms/geogreen/protocol/openid-connect/certs
+
   cloud:
     gateway:
       routes:
-        - id: service-1
+        - id: geospatial-api-docs
           uri: http://217.198.13.249:30091
           predicates:
-            - Path=/geospatial/**
+            - Path=/geospatial/v3/api-docs
           filters:
             - StripPrefix=1
-
-        - id: service-2-api
-          uri: http://217.198.13.249:30094
+        - id: geospatial-urls
+          uri: http://217.198.13.249:30091
           predicates:
-            - Path=/users/**
-          filters:
-            - StripPrefix=1
+            - Path=/geo/**
+
 
 springdoc:
   api-docs:
     enabled: true
   swagger-ui:
-    enabled: true
-    config-url: /v3/api-docs/swagger-config
     urls:
       - name: geospatial
         url: /geospatial/v3/api-docs
-      - name: users
-        url: /users/v3/api-docs
 
 #          filters:
 #            - name: CircuitBreaker
