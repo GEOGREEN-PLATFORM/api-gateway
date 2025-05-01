@@ -18,15 +18,28 @@ spring:
         - id: service-1
           uri: http://217.198.13.249:30091
           predicates:
-            - Path=/service-1/**
+            - Path=/geospatial/**
+          filters:
+            - StripPrefix=1
+
+        - id: service-2-api
+          uri: http://217.198.13.249:30094
+          predicates:
+            - Path=/users/**
           filters:
             - StripPrefix=1
 
 springdoc:
+  api-docs:
+    enabled: true
   swagger-ui:
+    enabled: true
+    config-url: /v3/api-docs/swagger-config
     urls:
-      - name: Service 1
-        url: /service-1/v3/api-docs
+      - name: geospatial
+        url: /geospatial/v3/api-docs
+      - name: users
+        url: /users/v3/api-docs
 
 #          filters:
 #            - name: CircuitBreaker
