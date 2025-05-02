@@ -17,15 +17,24 @@ spring:
       routes:
 #        geospatial-server
         - id: geospatial-server-api-docs
-          uri: http://217.198.13.249:30091
+          uri: http://217.198.13.249:300
           predicates:
             - Path=/geospatial-server/v3/api-docs
           filters:
             - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
         - id: geospatial-server-urls
-          uri: http://217.198.13.249:30091
+          uri: http://217.198.13.249:300
           predicates:
             - Path=/geo/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
 #        user-server
         - id: user-server-api-docs
           uri: http://217.198.13.249:30097
@@ -33,10 +42,19 @@ spring:
             - Path=/user-server/v3/api-docs
           filters:
             - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
         - id: user-server-urls
           uri: http://217.198.13.249:30097
           predicates:
             - Path=/user/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
 #        file-server
         - id: file-server-api-docs
           uri: http://217.198.13.249:30092
@@ -44,15 +62,29 @@ spring:
             - Path=/file-server/v3/api-docs
           filters:
             - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
         - id: file-server-urls
           uri: http://217.198.13.249:30092
           predicates:
             - Path=/file/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
 #        keycloak
         - id: file-server-urls
           uri: http://217.198.13.249:30096
           predicates:
             - Path=/realms/geogreen, /realms/geogreen/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
 #        collect-user-data
         - id: collect-user-data-server-api-docs
           uri: http://217.198.13.249:30095
@@ -60,10 +92,19 @@ spring:
             - Path=/collect-user-data-server/v3/api-docs
           filters:
             - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
         - id: collect-user-data-server-urls
           uri: http://217.198.13.249:30095
           predicates:
-            - Path=/collect/**
+            - Path=/user-marker/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
 #        event-manager-server
         - id: event-manager-server-api-docs
           uri: http://217.198.13.249:30094
@@ -71,10 +112,19 @@ spring:
             - Path=/event-manager-server/v3/api-docs
           filters:
             - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
         - id: event-manager-server-urls
           uri: http://217.198.13.249:30094
           predicates:
             - Path=/event/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
 #        photo-analyser-server
         - id: photo-analyser-server-api-docs
           uri: http://217.198.13.249:30093
@@ -82,10 +132,19 @@ spring:
             - Path=/photo-analyser-server/v3/api-docs
           filters:
             - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
         - id: photo-analyser-server-urls
           uri: http://217.198.13.249:30093
           predicates:
             - Path=/analyse/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
 
 springdoc:
   api-docs:
@@ -105,35 +164,29 @@ springdoc:
       - name: photo-analyser-server
         url: /photo-analyser-server/v3/api-docs
 
-#          filters:
-#            - name: CircuitBreaker
-#              args:
-#                name: default-circuit-breaker
-#                fallbackUri: forward:/fallback
-
 logging:
   level:
     root: ${LOG_LEVEL:info}
     org.springframework.cloud.gateway: ${GATEWAY_LOG_LEVEL:info}
 
-#resilience4j:
-#  circuitbreaker:
-#    configs:
-#      default:
-#        sliding-window-type: count_based
-#        sliding-window-size: 10
-#        failure-rate-threshold: 50
-#        wait-duration-in-open-state: 60s
-#        permitted-number-of-calls-in-half-open-state: 3
-#        automatic-transition-from-open-to-half-open-enabled: true
-#        minimum-number-of-calls: 3
-#    instances:
-#      default-circuit-breaker:
-#        base-config: default
-#  timelimiter:
-#    configs:
-#      default:
-#        timeout-duration: 5s
-#    instances:
-#      default-circuit-breaker:
-#        base-config: default
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-type: count_based
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 300s
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        minimum-number-of-calls: 5
+    instances:
+      default-circuit-breaker:
+        base-config: default
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 10s
+    instances:
+      default-circuit-breaker:
+        base-config: default
