@@ -30,7 +30,9 @@ public class SecurityConfiguration {
             "/geo/info/getAll/{problemAreaType}",
             "/user/register/forgot-password/**",
             "/user/register/user",
-            "/file/image/**"
+            "/file/image/**",
+            "/realms/geogreen",
+            "/realms/geogreen/**"
     };
 
     @Bean
