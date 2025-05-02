@@ -12,6 +12,27 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @EnableWebFluxSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
+    private static final String[] SWAGGER_URLS = {
+            "/webjars/swagger-ui/**",
+            "/v3/api-docs/swagger-config",
+            "/geospatial-server/v3/api-docs",
+            "/user-server/v3/api-docs",
+            "/file-server/v3/api-docs",
+            "/collect-user-data-server/v3/api-docs",
+            "/event-manager-server/v3/api-docs",
+            "/photo-analyser-server/v3/api-docs"
+    };
+
+    private static final String[] ALLOWED_URLS = {
+            "/geo/dict/**",
+            "/geo/info/{geoPointId}",
+            "/geo/info/getAll",
+            "/geo/info/getAll/{problemAreaType}",
+            "/user/register/forgot-password/**",
+            "/user/register/user",
+            "/file/image/**"
+    };
+
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
@@ -20,7 +41,9 @@ public class SecurityConfiguration {
                 .authorizeExchange(
                         request -> request
                                 .pathMatchers("/error").permitAll()
-                                .anyExchange().permitAll()
+                                .pathMatchers(ALLOWED_URLS).permitAll()
+                                .pathMatchers(SWAGGER_URLS).permitAll()
+                                .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2
                         .jwt(Customizer.withDefaults())
