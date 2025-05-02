@@ -12,29 +12,98 @@ spring:
         jwt:
           issuer-uri: ${KEYCLOAK_URL:http://217.198.13.249:30096}/realms/geogreen
           jwk-set-uri: ${KEYCLOAK_URL:http://217.198.13.249:30096}/realms/geogreen/protocol/openid-connect/certs
-
   cloud:
     gateway:
       routes:
-        - id: geospatial-api-docs
+#        geospatial-server
+        - id: geospatial-server-api-docs
           uri: http://217.198.13.249:30091
           predicates:
-            - Path=/geospatial/v3/api-docs
+            - Path=/geospatial-server/v3/api-docs
           filters:
             - StripPrefix=1
-        - id: geospatial-urls
+        - id: geospatial-server-urls
           uri: http://217.198.13.249:30091
           predicates:
             - Path=/geo/**
-
+#        user-server
+        - id: user-server-api-docs
+          uri: http://217.198.13.249:30097
+          predicates:
+            - Path=/user-server/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: user-server-urls
+          uri: http://217.198.13.249:30097
+          predicates:
+            - Path=/user/**
+#        file-server
+        - id: file-server-api-docs
+          uri: http://217.198.13.249:30092
+          predicates:
+            - Path=/file-server/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: file-server-urls
+          uri: http://217.198.13.249:30092
+          predicates:
+            - Path=/file/**
+#        keycloak
+        - id: file-server-urls
+          uri: http://217.198.13.249:30096
+          predicates:
+            - Path=/realms/geogreen, /realms/geogreen/**
+#        collect-user-data
+        - id: collect-user-data-server-api-docs
+          uri: http://217.198.13.249:30095
+          predicates:
+            - Path=/collect-user-data-server/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: collect-user-data-server-urls
+          uri: http://217.198.13.249:30095
+          predicates:
+            - Path=/collect/**
+#        event-manager-server
+        - id: event-manager-server-api-docs
+          uri: http://217.198.13.249:30094
+          predicates:
+            - Path=/event-manager-server/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: event-manager-server-urls
+          uri: http://217.198.13.249:30094
+          predicates:
+            - Path=/event/**
+#        photo-analyser-server
+        - id: photo-analyser-server-api-docs
+          uri: http://217.198.13.249:30093
+          predicates:
+            - Path=/photo-analyser-server/v3/api-docs
+          filters:
+            - StripPrefix=1
+        - id: photo-analyser-server-urls
+          uri: http://217.198.13.249:30093
+          predicates:
+            - Path=/analyse/**
 
 springdoc:
   api-docs:
     enabled: true
   swagger-ui:
     urls:
-      - name: geospatial
-        url: /geospatial/v3/api-docs
+      - name: geospatial-server
+        url: /geospatial-server/v3/api-docs
+      - name: user-server
+        url: /user-server/v3/api-docs
+      - name: file-server
+        url: /file-server/v3/api-docs
+      - name: collect-user-data-server
+        url: /collect-user-data-server/v3/api-docs
+      - name: event-manager-server
+        url: /event-manager-server/v3/api-docs
+      - name: photo-analyser-server
+        url: /photo-analyser-server/v3/api-docs
 
 #          filters:
 #            - name: CircuitBreaker
@@ -45,7 +114,7 @@ springdoc:
 logging:
   level:
     root: ${LOG_LEVEL:info}
-    org.springframework.cloud.gateway: INFO
+    org.springframework.cloud.gateway: ${GATEWAY_LOG_LEVEL:info}
 
 #resilience4j:
 #  circuitbreaker:
