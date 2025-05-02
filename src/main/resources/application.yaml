@@ -10,8 +10,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${KEYCLOAK_URL:http://217.198.13.249:30096}/realms/geogreen
-          jwk-set-uri: ${KEYCLOAK_URL:http://217.198.13.249:30096}/realms/geogreen/protocol/openid-connect/certs
+          issuer-uri: ${KEYCLOAK_HOST:http://217.198.13.249:30096}/realms/geogreen
+          jwk-set-uri: ${KEYCLOAK_HOST:http://217.198.13.249:30096}/realms/geogreen/protocol/openid-connect/certs
   cloud:
     gateway:
       routes:
@@ -77,7 +77,7 @@ spring:
                 fallbackUri: forward:/fallback
 #        keycloak
         - id: keycloak
-          uri: ${KEYCLOAK:http://217.198.13.249:30096}
+          uri: ${KEYCLOAK_HOST:http://217.198.13.249:30096}
           predicates:
             - Path=/realms/geogreen, /realms/geogreen/**
           filters:
