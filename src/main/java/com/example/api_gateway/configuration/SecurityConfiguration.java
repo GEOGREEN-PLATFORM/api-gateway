@@ -20,7 +20,9 @@ public class SecurityConfiguration {
             "/file-server/v3/api-docs",
             "/collect-user-data-server/v3/api-docs",
             "/event-manager-server/v3/api-docs",
-            "/photo-analyser-server/v3/api-docs"
+            "/photo-analyser-server/v3/api-docs",
+            "/notification-server/v3/api-docs",
+            "/report-server/v3/api-docs"
     };
 
     private static final String[] ALLOWED_URLS = {
