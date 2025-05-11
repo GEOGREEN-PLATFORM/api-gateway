@@ -145,6 +145,46 @@ spring:
               args:
                 name: default-circuit-breaker
                 fallbackUri: forward:/fallback
+#        notification-server
+        - id: notification-server-api-docs
+          uri: ${NOTIFICATION_SERVER_HOST:http://217.198.13.249:30098}
+          predicates:
+            - Path=/notification-server/v3/api-docs
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
+        - id: notification-server-urls
+          uri: ${NOTIFICATION_SERVER_HOST:http://217.198.13.249:30098}
+          predicates:
+            - Path=/notification/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
+#        report-server
+        - id: report-server-api-docs
+          uri: ${REPORT_SERVER_HOST:http://217.198.13.249:30089}
+          predicates:
+            - Path=/report-server/v3/api-docs
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
+        - id: report-server-urls
+          uri: ${REPORT_SERVER_HOST:http://217.198.13.249:30089}
+          predicates:
+            - Path=/report/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: default-circuit-breaker
+                fallbackUri: forward:/fallback
 
 springdoc:
   api-docs:
@@ -163,6 +203,10 @@ springdoc:
         url: /event-manager-server/v3/api-docs
       - name: photo-analyser-server
         url: /photo-analyser-server/v3/api-docs
+      - name: notification-server
+        url: /notification-server/v3/api-docs
+      - name: report-server
+        url: /report-server/v3/api-docs
 
 logging:
   level:
