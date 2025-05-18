@@ -39,7 +39,8 @@ public class SecurityConfiguration {
             "/user/register/user",
             "/file/image/**",
             "/realms/geogreen",
-            "/realms/geogreen/**"
+            "/realms/geogreen/**",
+            "/actuator/**"
     };
 
     @Bean
