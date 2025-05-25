@@ -79,7 +79,7 @@ spring:
         - id: keycloak
           uri: ${KEYCLOAK_HOST:http://217.198.13.249:30096}
           predicates:
-            - Path=/realms/geogreen, /realms/geogreen/**, /realms/**, /admin/master/**
+            - Path=/realms/geogreen, /realms/geogreen/**, /realms/**, /admin/master/**, auth/**
           filters:
             - name: CircuitBreaker
               args:
