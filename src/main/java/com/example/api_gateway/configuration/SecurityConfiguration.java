@@ -38,7 +38,7 @@ public class SecurityConfiguration {
             "/user/register/forgot-password/**",
             "/user/register/user",
             "/file/image/**",
-            "/realms/geogreen",
+            "/realms/**",
             "/realms/geogreen/**",
             "/actuator/**"
     };
