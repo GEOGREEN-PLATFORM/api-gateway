@@ -41,7 +41,11 @@ public class SecurityConfiguration {
             "/realms/**",
             "auth/**",
             "/realms/geogreen/**",
-            "/actuator/**"
+            "/actuator/**",
+            "/realms/**",
+            "/admin/**",
+            "/auth/**",
+            "/admin/realms/geogreen/users"
     };
 
     @Bean

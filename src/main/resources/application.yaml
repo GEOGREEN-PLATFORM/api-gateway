@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 
 spring:
   main:
@@ -79,7 +79,7 @@ spring:
         - id: keycloak
           uri: ${KEYCLOAK_HOST:http://217.198.13.249:30096}
           predicates:
-            - Path=/realms/geogreen, /realms/geogreen/**, /realms/**, /admin/master/**, auth/**
+            - Path=/realms/geogreen, /realms/geogreen/**, /realms/**, /admin/master/**, /auth/**, /realms/**, /admin/**, /auth/**
           filters:
             - name: CircuitBreaker
               args:
